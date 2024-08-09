@@ -55,7 +55,7 @@ class Auto_Show {
       
       console.log(`Вы тестируете  автомобиль ${this.car}`);
       this.start()
-      this.buy();
+      
   });
   
 
@@ -65,6 +65,7 @@ class Auto_Show {
     console.log(`Ее цена составляет ${this.selled}`)
     showModal(() => {
       console.log('Поздравляю с покупкой автомбиля');
+      this.start()
   });
   }
 

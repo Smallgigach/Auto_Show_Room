@@ -55,6 +55,7 @@ class Auto_Show {
       
       console.log(`Вы тестируете  автомобиль ${this.car}`);
       this.start()
+      this.buy();
   });
   
 

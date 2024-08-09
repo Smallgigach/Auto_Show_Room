@@ -1,7 +1,39 @@
+const confirmModal = document.getElementById('confirmModal');
+const yesBtn = document.getElementById('yesBtn');
+const noBtn = document.getElementById('noBtn');
+let confirmCallback;  
+
+function showModal(callback) {
+    confirmCallback = callback; 
+    confirmModal.style.display = 'block';  
+}
+
+function hideModal() {
+    confirmModal.style.display = 'none'; 
+}
+
+yesBtn.addEventListener('click', () => {
+    hideModal(); 
+    if (confirmCallback) confirmCallback(); 
+});
+
+noBtn.addEventListener('click', () => {
+    hideModal();  
+    console.log("Ты нищий"); 
+});
 class Auto_Show {
 
-sell(showroomName) { // введите названия вашего автосалона
-  console.log(`В ${showroomName} автосалоне  продается машина ${this.car}`); 
+
+  buy(showroomName) { 
+    console.log(`В ${showroomName} автосалоне можно купить ${this.car}`);
+    console.log(`Ее цена составляет ${this.selled}`)
+    showModal(() => {
+      console.log('Поздравляю с покупкой автомбиля');
+  });
+  }
+
+sell(showroomName) { 
+  console.log(`В ${showroomName} автосалоне  вы можете продать свою  машину ${this.car}`); 
 }
 
 start() {
@@ -24,27 +56,30 @@ class Car extends Auto_Show {
     this.car = options.car;
     this.Maxspeedkm_h = options.Maxspeedkm_h;
   }
-  start(initialSpeed) { // ввести начальную скорость с которой она начнет движение
+  start(initialSpeed) {
     let speed = initialSpeed || 0;
 
-  console.log(`${this.car} поехала хасанить`);
-  const setIntervalId = setInterval(() => {
-    if( speed < this.Maxspeedkm_h) {
-      console.log(`текущая скорость: ${speed}`);
-      speed += 55;
-    
-    if(speed > this.Maxspeedkm_h) {
-      speed = this.Maxspeedkm_h;
-    
-   }
-  }
-      else {
-        clearInterval(setIntervalId)
-        console.log(`${this.car} достигла максимальной скорости: ${this.Maxspeedkm_h} km/h`);
-      }
-    }
-  , 1000)
-  }
+    console.log(`${this.car} поехала хасанить`);
+    const setIntervalId = setInterval(() => {
+        if (speed < 300) {
+            console.log(`текущая скорость: ${speed}`);
+            speed += 55; // Увеличиваем скорость на 55 км/ч до 300 км/ч
+            if (speed > 300) {
+                speed = 300; // Ограничиваем скорость 300 км/ч
+            }
+        } else if (speed < this.Maxspeedkm_h) {
+            console.log(`текущая скорость: ${speed}`);
+            speed++; // Увеличиваем скорость на 1 км/ч после 300 км/ч
+            if (speed > this.Maxspeedkm_h) {
+                speed = this.Maxspeedkm_h; // Ограничиваем максимальную скорость
+            }
+        } 
+        if (speed === this.Maxspeedkm_h) {
+            clearInterval(setIntervalId);
+            console.log(`${this.car} достигла максимальной скорости: ${this.Maxspeedkm_h} km/h`);
+        }
+    }, 1000);
+}
   sell(showroomName) {
     super.sell(showroomName);
    

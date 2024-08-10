@@ -47,38 +47,63 @@ noBtn2.addEventListener('click', () => {
     console.log("вы не тестируете автомобиль"); 
 });
 class Auto_Show {
-
-  test() {
-
-
+constructor() {
+  this.hasCar = false;
+}
+  testCar() {
+    if (!this.hasCar) {
+      console.log('Сначала вам нужно купить машину!');
+      return;
+  }
     showModal2(() => {
       
       console.log(`Вы тестируете  автомобиль ${this.car}`);
       this.start()
+    
       
   });
   
 
   }
-  buy(showroomName) { 
-    console.log(`В ${showroomName} автосалоне можно купить ${this.car}`);
+  buyCar() { 
+    if (this.hasCar) {
+      console.log('У вас уже есть машина!');
+      return;
+  }
+    console.log(`В элитном автосалоне можно купить ${this.car}`);
     console.log(`Ее цена составляет ${this.selled}`)
     showModal(() => {
       console.log('Поздравляю с покупкой автомбиля');
-      this.start()
+      this.hasCar = true;
+      
   });
   }
 
-sell(showroomName) { 
-  console.log(`В ${showroomName} автосалоне  вы можете продать свою  машину ${this.car}`); 
+sellCar() { 
+  console.log(`В элитном автосалоне  вы можете продать свою  машину ${this.car}`); 
 }
 
-start() {
-  console.log(`Машина ${this.car} начала движение`);
-  
-  
+startCar() {
+  if (!this.hasCar) {
+    console.log('Сначала вам нужно купить машину!');
+    return;
 }
-stop() {
+  
+  if(showModal2(() => {
+      console.log('Для начал купите машину!');
+    
+    this.start()
+  
+    
+}));
+    
+
+}
+stopCar() {
+  if (!this.hasCar) {
+    console.log('Вы не можете остановить машину, у вас ее нет!');
+    return;
+}
   console.log(`Процесс остановки автомобиля ${this.car} начался.`);
  
 }
@@ -94,14 +119,19 @@ class Car extends Auto_Show {
     this.Maxspeedkm_h = options.Maxspeedkm_h;
   }
 
-
-
-
-  start(initialSpeed) {
+  startCar(initialSpeed) {
+    if (!this.hasCar) {
+      console.log('Сначала вам нужно купить машину!');
+      return;
+    }
+    if(!this.rights) {
+      console.log('приобретите права');
+      return;
       
+    }
+    this.rights = true;
       let speed = initialSpeed || 0;
   
-      console.log(`${this.car} поехала хасанить`);
       const setIntervalId = setInterval(() => {
           if (speed < 300) {
               console.log(`текущая скорость: ${speed}`);
@@ -123,16 +153,17 @@ class Car extends Auto_Show {
       }, 1000);
     
 }
-  sell(showroomName) {
-    super.sell(showroomName);
+  sellCar() {
+    super.sell();
    
     
   }
-//   static compare(CarA, CarB) {
-//     return CarA.Maxspeedkm_h - CarB.Maxspeedkm_h;
-// }
-stop(amount, speed) { // ввести скорость снижения автомобиля и саму скорость  с которой будет начинать снижаться
-  super.stop()
+
+stopCar(amount, speed) { // ввести скорость снижения автомобиля и саму скорость  с которой будет начинать снижаться
+  if(!this.hasCar) {
+    console.log('Чтобы остановить машину,вам нужно ее купить!');
+    return;
+  }
   this.speed = speed
   const intervalId = setInterval(() => {
     if (speed > 0) {
@@ -146,6 +177,40 @@ stop(amount, speed) { // ввести скорость снижения авто
   }, 1000); 
 }
 
+
+}
+
+class User extends Auto_Show {
+
+constructor(options) {
+  super(options);
+  this.name = options.name;
+  this.age = options.age;
+  this.wallet = options.wallet;
+  this.rights = false;
+  this.car = null;
+}
+setCar(carInstance) {
+  this.car = carInstance;
+  this.hasCar = true; // Устанавливаем автомобиль для пользователя
+}
+setAgeAndRigths(value) {
+  this.age = value;
+  if(!this.rights && this.age < 18) {
+    console.log('вам нужно сдать на  права, на категорию B');
+    
+  }
+  else {
+    console.log(`Вы можете купить ${this.car} в автосалоне`);
+    this.rights = true;
+  }
+  
+}
+  getAgeAndRigths() {
+    return setAgeAndRigths();
+  }
+
+
 }
 
 let car = new Car({
@@ -155,23 +220,5 @@ let car = new Car({
     Maxspeedkm_h: 340
     })
 
-
-
-
-// let cars = [
-//   new Car({
-//     name: 'крутой',
-//   car: 'BMW M5 F10',
-//   color: 'red',
-//   selled: '100.000$',
-//   Maxspeedkm_h: 340
-//   }),
-//   new Car({
-//     name: 'крутой',
-//   car: 'BMW M5 F90 CS',
-//   color: 'black',
-//   selled: '130.500$',
-//   Maxspeedkm_h: 320
-//   }),
-// ]
-// cars.sort(Car.compare)
+let user = new User({name:'Qwerty', age: 19, wallet: `105_100$`, rights: false})
+user.setCar('');
